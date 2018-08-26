@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./target/CQRS-h2-db
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    generate-ddl: true

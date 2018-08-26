@@ -1,0 +1,31 @@
+version: "3.2"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: "cqrs_mongodb"
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/zenbrain --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - cqrs_data_mongo:/data/db
+    ports:
+        - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+    networks:
+      - eci
+
+# required to get along with VPN from mgm to ECI
+networks:
+  eci:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.58.0.0/16
+volumes:
+  cqrs_data_mongo:

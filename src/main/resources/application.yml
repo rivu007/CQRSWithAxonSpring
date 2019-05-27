@@ -8,20 +8,4 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-
-
-axon:
-  serializer:
-    events: jackson
-  amqp:
-    exchange: task-exchange
-  eventhandling:
-    processors:
-      storage:
-        source: myQueueMessageSource
+    database-platform: org.hibernate.dialect.MySQL8Dialect

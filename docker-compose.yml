@@ -10,15 +10,3 @@ services:
       - cqrs_data_mysql:/var/lib/mysql
     ports:
       - "3306:3306"
-  rabbitMQ-cart-service:
-    image: rabbitmq:3.7-management-alpine
-    container_name: rabbitMQ-cart-service
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-
-volumes:
-  cqrs_data_mysql:

@@ -29,14 +29,6 @@ dependencies {
 	compile("org.axonframework:axon-spring-boot-starter:${axonVersion}") {
 		exclude group: 'org.axonframework', module: 'axon-server-connector'
 	}
-	compile("org.axonframework:axon-amqp:3.4.3")
-
-	//Fixme: https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j
-	compile "javax.xml.bind:jaxb-api:2.3.0"
-
-	//compile("org.axonframework:axon-mongo:${axonVersion}")
-	//compile('com.h2database:h2')
-	//compileOnly('org.projectlombok:lombok')
 	runtime("mysql:mysql-connector-java:8.0.16")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
@@ -45,6 +37,6 @@ dependencies {
 
 dockerCompose {
 	useComposeFiles = ['docker-compose.yml']
-	startedServices = ['mysql', 'rabbitMQ-cart-service']
+	startedServices = ['mysql']
 	isRequiredBy(project.tasks.bootRun)
 }

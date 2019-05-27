@@ -5,14 +5,18 @@ import com.abhilash.cqrs.domain.events.TaskCreatedEvent;
 import com.abhilash.cqrs.domain.events.TaskStarredEvent;
 import com.abhilash.cqrs.domain.events.TaskTitleModifiedEvent;
 import com.abhilash.cqrs.domain.events.TaskUnstarredEvent;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.NoSuchElementException;
 
 /**
  * @author aghosh
  */
 @Component
+@ProcessingGroup("storage")
 public class TaskEntryUpdatingEventHandler {
 
 	private final TaskEntryRepository taskEntryRepository;
@@ -33,7 +37,7 @@ public class TaskEntryUpdatingEventHandler {
 
 	@EventHandler
 	void on(TaskCompletedEvent event) {
-		TaskEntry task = taskEntryRepository.findOne(event.getId());
+		TaskEntry task = findTaskById(event.getId());
 		task.setCompleted(true);
 
 		taskEntryRepository.save(task);
@@ -41,7 +45,7 @@ public class TaskEntryUpdatingEventHandler {
 
 	@EventHandler
 	void on(TaskTitleModifiedEvent event) {
-		TaskEntry task = taskEntryRepository.findOne(event.getId());
+		TaskEntry task = findTaskById(event.getId());
 		task.setTitle(event.getTitle());
 
 		taskEntryRepository.save(task);
@@ -49,7 +53,7 @@ public class TaskEntryUpdatingEventHandler {
 
 	@EventHandler
 	void on (TaskStarredEvent event) {
-		TaskEntry task = taskEntryRepository.findOne(event.getId());
+		TaskEntry task = findTaskById(event.getId());
 		task.setStarred(true);
 
 		taskEntryRepository.save(task);
@@ -57,9 +61,15 @@ public class TaskEntryUpdatingEventHandler {
 
 	@EventHandler
 	void on (TaskUnstarredEvent event) {
-		TaskEntry task = taskEntryRepository.findOne(event.getId());
+		TaskEntry task = findTaskById(event.getId());
 		task.setStarred(false);
 
 		taskEntryRepository.save(task);
+	}
+
+	private TaskEntry findTaskById(String id) {
+		return taskEntryRepository
+						.findById(id)
+						.orElseThrow(() -> new NoSuchElementException("Event not found: " + id));
 	}
 }

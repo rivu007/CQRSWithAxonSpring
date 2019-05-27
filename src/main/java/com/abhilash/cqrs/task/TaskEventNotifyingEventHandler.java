@@ -8,16 +8,20 @@ import com.abhilash.cqrs.domain.events.TaskTitleModifiedEvent;
 import com.abhilash.cqrs.domain.events.TaskUnstarredEvent;
 import com.abhilash.cqrs.query.TaskEntry;
 import com.abhilash.cqrs.query.TaskEntryRepository;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
+
+import java.util.NoSuchElementException;
 
 
 /**
  * @author aghosh
  */
 @Component
+@ProcessingGroup("pushNotification")
 public class TaskEventNotifyingEventHandler {
 
 	private final SimpMessageSendingOperations messagingTemplate;
@@ -38,30 +42,36 @@ public class TaskEventNotifyingEventHandler {
 
 	@EventHandler
 	void on(TaskCompletedEvent event) {
-		TaskEntry task = taskEntryRepository.findOne(event.getId());
+		TaskEntry task = findTaskById(event.getId());
 		publish(task.getUsername(), event);
 	}
 
 	@EventHandler
 	void on(TaskTitleModifiedEvent event) {
-		TaskEntry task = taskEntryRepository.findOne(event.getId());
+		TaskEntry task = findTaskById(event.getId());
 		publish(task.getUsername(), event);
 	}
 
 	@EventHandler
 	void on (TaskStarredEvent event) {
-		TaskEntry task = taskEntryRepository.findOne(event.getId());
+		TaskEntry task = findTaskById(event.getId());
 		publish(task.getUsername(), event);
 	}
 
 	@EventHandler
 	void on (TaskUnstarredEvent event) {
-		TaskEntry task = taskEntryRepository.findOne(event.getId());
+		TaskEntry task = findTaskById(event.getId());
 		publish(task.getUsername(), event);
 	}
 
 	private void publish(String username, TaskEvent event) {
 		String type = event.getClass().getSimpleName();
 		this.messagingTemplate.convertAndSendToUser(username, "/queue/task-updates", new TaskEventNotification(type, event));
+	}
+
+	private TaskEntry findTaskById(String id) {
+		return taskEntryRepository
+						.findById(id)
+						.orElseThrow(() -> new NoSuchElementException("Event not found: " + id));
 	}
 }

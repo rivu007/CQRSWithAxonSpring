@@ -12,13 +12,14 @@ import com.abhilash.cqrs.domain.events.TaskTitleModifiedEvent;
 import com.abhilash.cqrs.domain.events.TaskUnstarredEvent;
 import lombok.NoArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import javax.validation.constraints.NotNull;
 
-import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
+import static org.axonframework.modelling.command.AggregateLifecycle.apply;
+
 
 /**
  * @author aghosh

@@ -1,7 +1,7 @@
 package com.abhilash.cqrs.domain.commands;
 
 import lombok.Value;
-import org.axonframework.commandhandling.TargetAggregateIdentifier;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import javax.validation.constraints.NotNull;
 

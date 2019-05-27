@@ -21,8 +21,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"/css/**",
 						"/js/**",
 						"/img/**",
-						"/health",
-					    "/console/**"
+						"/health"
 				).permitAll()
 				.anyRequest().authenticated();
 		http
@@ -44,8 +43,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 			.inMemoryAuthentication()
-				.withUser("admin").password("1234").roles("USER").and()
-				.withUser("foo").password("bar").roles("USER");
+				.withUser("admin").password("{noop}1234").roles("USER").and()
+				.withUser("foo").password("{noop}bar").roles("USER");
 	}
 
 }

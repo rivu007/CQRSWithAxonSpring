@@ -10,3 +10,5 @@ services:
       - cqrs_data_mysql:/var/lib/mysql
     ports:
       - "3306:3306"
+volumes:
+  cqrs_data_mysql:
